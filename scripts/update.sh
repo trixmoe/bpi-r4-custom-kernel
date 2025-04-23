@@ -1,12 +1,13 @@
 #!/bin/sh
 
-cd "$(dirname "$0")"/../ || { printf " --- Error: cannot enter versioned patch system root directory\n"; exit 1; }
+vps_root_dir="$(dirname "$0")"/../
+cd "$vps_root_dir" || { printf " --- Error: cannot enter versioned patch system root directory\n"; exit 1; }
 
 # shellcheck source=./modules
 . ./modules
 
 for module in $MODULES; do
-    cd "$(dirname "$0")"/../ || { printf " --- Error: cannot return to versioned patch system root directory\n"; exit 1; }
+    cd "$vps_root_dir" || { printf " --- Error: cannot return to versioned patch system root directory\n"; exit 1; }
     printf " --- Updating module: %s\n" "$module"
     
     # Get module information
