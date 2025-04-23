@@ -6,6 +6,7 @@ cd "$(dirname "$0")"/../ || { printf " --- Error: cannot enter versioned patch s
 . ./modules
 
 for module in $MODULES; do
+    cd "$(dirname "$0")"/../ || { printf " --- Error: cannot return to versioned patch system root directory\n"; exit 1; }
     printf " --- Updating module: %s\n" "$module"
     
     # Get module information
@@ -35,5 +36,4 @@ for module in $MODULES; do
         printf "              Upstream: %s\n" "$HEAD_COMMIT"
         git checkout "$COMMIT"
     fi
-    cd .. || { printf " --- Error: cannot return to versioned patch system root directory\n"; exit 1; }
 done
