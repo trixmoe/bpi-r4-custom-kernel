@@ -1,6 +1,6 @@
 #!/bin/sh
 
-vps_root_dir="$(dirname "$0")"/../
+vps_root_dir=$(realpath "$(dirname "$0")"/../)
 cd "$vps_root_dir" || { printf " --- Error: cannot enter versioned patch system root directory\n"; exit 1; }
 
 # shellcheck source=./modules
