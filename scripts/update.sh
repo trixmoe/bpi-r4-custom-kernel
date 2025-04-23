@@ -23,7 +23,7 @@ for module in $MODULES; do
         cd .. || { printf " --- Error: cannot return to versioned patch system root directory\n"; exit 1; }
     else
         printf " --- Cloning module...\n"
-        git clone "$URL" "$DIRECTORY"
+        git clone "$URL" "$DIRECTORY" || { printf " --- Error: failed to clone module:%s\n" "$URL" ; exit 1; }
     fi
 
     # Check out branch/commit
