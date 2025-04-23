@@ -18,7 +18,7 @@ for module in $MODULES; do
 
     # Download/Update the module
     if [ -d "$DIRECTORY" ]; then
-        cd "$DIRECTORY" || { printf " --- Error: cannot enter module directory\n"; exit 1; }
+        cd "$DIRECTORY" || { printf " --- Error: cannot enter module directory \"%s\"\n" "$DIRECTORY"; exit 1; }
         git rev-parse --is-inside-work-tree > /dev/null 2>&1 || { printf " --- Error: module directory \"%s\" is not a git repository\n" "$DIRECTORY"; exit 1; }
         printf " --- Module already cloned\n"
         # TODO: re-update anyways, and throw away unsaved changes, possibly saving them in a branch
