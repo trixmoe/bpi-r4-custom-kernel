@@ -17,10 +17,11 @@ for module in $MODULES; do
 
     # Download/Update the module
     if [ -d "$DIRECTORY" ]; then
+        cd "$DIRECTORY" || { printf " --- Error: cannot enter module directory\n"; exit 1; }
+        git rev-parse --is-inside-work-tree > /dev/null 2>&1 || { printf " --- Error: module directory \"%s\" is not a git repository\n" "$DIRECTORY"; exit 1; }
         printf " --- Module already cloned\n"
-        cd "$DIRECTORY" || { printf " --- Error: cannot enter module directory to update\n"; exit 1; }
-        git pull
-        cd .. || { printf " --- Error: cannot return to versioned patch system root directory\n"; exit 1; }
+        # TODO: re-update anyways, and throw away unsaved changes, possibly saving them in a branch
+        continue
     else
         printf " --- Cloning module...\n"
         git clone "$URL" "$DIRECTORY" || { printf " --- Error: failed to clone module:%s\n" "$URL" ; exit 1; }
