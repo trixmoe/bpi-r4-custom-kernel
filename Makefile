@@ -3,7 +3,7 @@ default: help
 update: ## Update modules
 	@./scripts/update.sh
 
-clean: ## Delete modules
+dirclean: ## Delete modules
 	@./scripts/remove-modules.sh
 
 help: ## Show interactive help
