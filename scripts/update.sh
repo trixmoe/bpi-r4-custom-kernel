@@ -21,6 +21,7 @@ for module in $MODULES; do
         cd "$DIRECTORY" || { printf " --- Error: cannot enter module directory \"%s\"\n" "$DIRECTORY"; exit 1; }
         git rev-parse --is-inside-work-tree > /dev/null 2>&1 || { printf " --- Error: module directory \"%s\" is not a git repository\n" "$DIRECTORY"; exit 1; }
         printf " --- Module already cloned\n"
+        # git checkout -b vps-"$CURR_BRANCH"-"$(date +%s)"
         # TODO: re-update anyways, and throw away unsaved changes, possibly saving them in a branch
         continue
     else
