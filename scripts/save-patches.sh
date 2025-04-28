@@ -34,6 +34,7 @@ for module in $MODULES; do
     git config --local --unset user.name
     git config --local --unset user.email
 
+    # Saving commits bottom-up (from upstream to HEAD)
     # Save generic
     vps_ouput_dir="$vps_root_dir"/patches/"$module_dir"/generic
     mkdir -p "$vps_ouput_dir"

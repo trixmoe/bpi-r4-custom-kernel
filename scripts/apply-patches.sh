@@ -4,9 +4,10 @@
 
 print_help()
 {
-    echo "Usage: apply-patches.sh [option] [patch set]"
-    echo "    --tag       Tag the last patch applied with patch set name."
-    echo "                ! Required for applying/saving multiple patches."
+    printf "Usage: apply-patches.sh [patch set]\n\n"
+    warnmsg "This is not a utility to be used directly.\n"
+    warnindent "Make use of this utility through the existing Make targets\n"
+    warnindent "generic should always be applied first, followed by 1 specific target.\n"
 }
 
 while :; do
@@ -14,11 +15,6 @@ while :; do
         -\?|--help)
             print_help
             exit
-            ;;
-        --tag)
-            will_tag=1
-            shift
-            break
             ;;
         --)
             shift
@@ -35,6 +31,7 @@ while :; do
 done
 
 patch_set=$1
+[ -z "$patch_set" ] && { errormsg "no patch set provided\n"; print_help; exit 1; }
 
 vps_root_dir=$(rootdir)
 
