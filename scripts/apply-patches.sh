@@ -1,7 +1,5 @@
 #!/bin/sh
 
-unset WILL_TAG
-
 print_help()
 {
     echo "Usage: apply-patches.sh [option] [patch set]"
@@ -16,7 +14,7 @@ while :; do
             exit
             ;;
         --tag)
-            WILL_TAG=1
+            will_tag=1
             shift
             break
             ;;
@@ -34,7 +32,7 @@ while :; do
     shift
 done
 
-PATCH_SET=$1
+patch_set=$1
 
 vps_root_dir=$(realpath "$(dirname "$0")"/../)
 cd "$vps_root_dir" || { printf " --- Error: cannot enter versioned patch system root directory\n"; exit 1; }
@@ -43,16 +41,17 @@ cd "$vps_root_dir" || { printf " --- Error: cannot enter versioned patch system 
 . ./modules
 
 for module in $MODULES; do
-    eval DIRECTORY="\$${module}_DIRECTORY"
-    cd "$vps_root_dir/$DIRECTORY" || { printf " --- Error: cannot enter module \"%s\"\n" "$vps_root_dir/$DIRECTORY"; exit 1; }
+    module_dir="" # SC2154/SC2034
+    eval module_dir="\$${module}_DIRECTORY"
+    cd "$vps_root_dir/$module_dir" || { printf " --- Error: cannot enter module \"%s\"\n" "$vps_root_dir/$module_dir"; exit 1; }
 
     git config --local user.name "vps"
     git config --local user.email "vps@invalid"
 
-    git am --committer-date-is-author-date "$vps_root_dir/patches/$DIRECTORY/$PATCH_SET"/*
+    git am --committer-date-is-author-date "$vps_root_dir/patches/$module_dir/$patch_set"/*
 
-    if [ -n "$WILL_TAG" ]; then
-        git tag "$PATCH_SET"
+    if [ -n "$will_tag" ]; then
+        git tag "$patch_set"
     fi
 
     git config --local --unset user.name
