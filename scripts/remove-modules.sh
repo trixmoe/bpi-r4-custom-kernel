@@ -2,7 +2,7 @@
 # shellcheck source=./scripts/common.sh
 . "$(dirname "$0")/common.sh"
 
-rootdir >/dev/null/
+rootdir >/dev/null
 
 # shellcheck source=./modules
 . ./modules
