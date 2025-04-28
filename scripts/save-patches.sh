@@ -29,8 +29,7 @@ for module in $MODULES; do
     # Force committer and dates - allows for (more) consistent commit hashes
     git config --local user.name "vps"
     git config --local user.email "vps@invalid"
-    git rebase -r "$commit" --exec 'git commit --amend --no-edit'
-    FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --env-filter 'export GIT_COMMITTER_DATE="$GIT_AUTHOR_DATE"' "$commit..HEAD"
+    FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --tag-name-filter cat --env-filter 'export GIT_COMMITTER_DATE="$GIT_AUTHOR_DATE"; export GIT_COMMITTER_NAME="vps"; export GIT_COMMITTER_EMAIL="vps@invalid"' "$upstream_commit..HEAD"
     git config --local --unset user.name
     git config --local --unset user.email
 
