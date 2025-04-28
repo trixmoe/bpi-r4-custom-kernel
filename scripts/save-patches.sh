@@ -26,7 +26,7 @@ for module in $MODULES; do
     commit="" # SC2154/SC2034
     eval commit="\$${module}_COMMIT"
 
-    # Set the right committer and date to have fixed commit hashes
+    # Force committer and dates - allows for (more) consistent commit hashes
     git config --local user.name "vps"
     git config --local user.email "vps@invalid"
     git rebase -r "$commit" --exec 'git commit --amend --no-edit'
