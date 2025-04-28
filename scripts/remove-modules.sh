@@ -1,7 +1,8 @@
 #!/bin/sh
+# shellcheck source=./scripts/common.sh
 . "$(dirname "$0")/common.sh"
 
-vps_root_dir=$(rootdir)
+rootdir >/dev/null/
 
 # shellcheck source=./modules
 . ./modules

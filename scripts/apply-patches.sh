@@ -1,4 +1,5 @@
 #!/bin/sh
+# shellcheck source=./scripts/common.sh
 . "$(dirname "$0")/common.sh"
 
 print_help()

@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# shellcheck source=./scripts/colors
 . "$(dirname "$0")/colors"
 
 # shellcheck disable=SC2059,SC2145
