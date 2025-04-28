@@ -1,13 +1,13 @@
 #!/bin/sh
+. "$(dirname "$0")/common.sh"
 
-vps_root_dir=$(realpath "$(dirname "$0")"/../)
-cd "$vps_root_dir" || { printf " --- Error: cannot enter versioned patch system root directory\n"; exit 1; }
+vps_root_dir=$(rootdir)
 
 # shellcheck source=./modules
 . ./modules
 
 for module in $MODULES; do
-    printf " --- Removing module: %s\n" "$module"
+    infomsg "Removing module: %s\n" "$module"
 
     # Get module information
     module_dir="" # SC2154/SC2034
@@ -15,6 +15,6 @@ for module in $MODULES; do
 
     # Remove module
     if [ -d "$module_dir" ]; then
-        rm -rf "$module_dir" || { printf " --- Error: failed to remove module directory\n"; exit 1; }
+        rm -rf "$module_dir" || { errormsg "failed to remove module directory\n"; exit 1; }
     fi
 done

@@ -1,4 +1,5 @@
 #!/bin/sh
+. "$(dirname "$0")/common.sh"
 
 print_help()
 {
@@ -23,7 +24,7 @@ while :; do
             break
             ;;
         -?*)
-            printf 'Ignored unknown parameter: %s\n' "$1"
+            warnmsg 'Ignored unknown parameter: %s\n' "$1"
             ;;
         *)
             break
@@ -34,8 +35,7 @@ done
 
 patch_set=$1
 
-vps_root_dir=$(realpath "$(dirname "$0")"/../)
-cd "$vps_root_dir" || { printf " --- Error: cannot enter versioned patch system root directory\n"; exit 1; }
+vps_root_dir=$(rootdir)
 
 # shellcheck source=./modules
 . ./modules
@@ -45,9 +45,9 @@ for module in $MODULES; do
     eval module_dir="\$${module}_DIRECTORY"
     patches_dir=$vps_root_dir/patches/$module_dir/$patch_set
 
-    ! [ -d "$patches_dir" ] && { printf " --- Warning: patches \"%s\" do not exist for module \"%s\"\n" "$patch_set" "$module_dir"; continue; }
+    ! [ -d "$patches_dir" ] && { warnmsg "patches \"%s\" do not exist for module \"%s\"\n" "$patch_set" "$module_dir"; continue; }
 
-    cd "$vps_root_dir/$module_dir" || { printf " --- Error: cannot enter module \"%s\"\n" "$vps_root_dir/$module_dir"; exit 1; }
+    cd "$vps_root_dir/$module_dir" || { errormsg "cannot enter module \"%s\"\n" "$vps_root_dir/$module_dir"; exit 1; }
 
     git config --local user.name "vps"
     git config --local user.email "vps@invalid"

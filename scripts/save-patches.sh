@@ -1,23 +1,23 @@
 #!/bin/sh
+. "$(dirname "$0")/common.sh"
 
-vps_root_dir=$(realpath "$(dirname "$0")"/../)
-cd "$vps_root_dir" || { printf " --- Error: cannot enter versioned patch system root directory\n"; exit 1; }
+vps_root_dir=$(rootdir)
 
 # shellcheck source=./modules
 . ./modules
 
 save_patches()
 {
-    git rev-parse "$including_commit" >/dev/null 2>&1 || { printf " --- Error: \"%s\" is missing from module \"%s\"\n" "$including_commit" "$module_dir"; exit 1; }
+    git rev-parse "$including_commit" >/dev/null 2>&1 || { errormsg "\"%s\" is missing from module \"%s\"\n" "$including_commit" "$module_dir"; return 1; }
     git format-patch -k --patience -o "$vps_ouput_dir" "$before_commit..$including_commit"
 }
 
 for module in $MODULES; do
-    printf " --- Saving patches for module: %s\n" "$module"
-    cd "$vps_root_dir" || { printf " --- Error: cannot enter versioned patch system root directory\n"; exit 1; }
+    infomsg "Saving patches for module: %s\n" "$module"
+    cd "$vps_root_dir" || { errormsg "cannot enter versioned patch system root directory\n"; exit 1; }
     module_dir="" # SC2154/SC2034
     eval module_dir="\$${module}_DIRECTORY"
-    cd "$module_dir" || { printf " --- Error: cannot enter module directory \"%s\"\n" "$module_dir"; continue; }
+    cd "$module_dir" || { warnmsg "cannot enter module directory \"%s\"\n" "$module_dir"; continue; }
 
     vps_ouput_dir=$vps_root_dir/patches/$module_dir/
     mkdir -p "$vps_ouput_dir"
@@ -38,7 +38,7 @@ for module in $MODULES; do
     mkdir -p "$vps_ouput_dir"
     before_commit=$commit
     including_commit=generic
-    save_patches
+    save_patches || continue
 
     # Save specific
     # TODO: use tags to save to the right directory
@@ -47,5 +47,5 @@ for module in $MODULES; do
     mkdir -p "$vps_ouput_dir"
     before_commit=$including_commit
     including_commit=HEAD
-    save_patches
+    save_patches || continue
 done
