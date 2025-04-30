@@ -53,6 +53,7 @@ for module in $MODULES; do
     #       ........ - specific commits
     #    ...         - generic commits
     most_recent_tag=$(git describe --tags --abbrev=0)
+    git merge-base --is-ancestor "$upstream_commit" "$most_recent_tag" || { errormsg "The patchset tags for \"%s\" are before upstream commit. Skipping.\n" "$module_dir" ; continue; }
     vps_output_dir=$vps_root_dir/patches/$module_dir/$most_recent_tag
     mkdir -p "$vps_output_dir"
     including_commit=HEAD
