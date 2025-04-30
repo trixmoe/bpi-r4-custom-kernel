@@ -3,6 +3,13 @@
 # shellcheck source=./scripts/colors
 . "$(dirname "$0")/colors"
 
+# shellcheck disable=SC2034
+{
+VPS_AUTHOR_NAME=vps
+VPS_AUTHOR_EMAIL=vps@invalid
+VPS_AUTHOR="$VPS_AUTHOR_NAME <${VPS_AUTHOR_EMAIL}>"
+}
+
 # shellcheck disable=SC2059,SC2145
 errormsg() {
     printf "$ERR --- Error: $@" >&2
