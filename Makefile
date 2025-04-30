@@ -9,13 +9,13 @@ dirclean: ## Delete modules
 save: ## Save patches
 	@./scripts/save-patches.sh
 
-generic: ## Apply ONLY generic patches
-	@./scripts/apply-patches.sh --tag generic
+generic: ## Apply generic patches
+	@./scripts/apply-patches.sh generic
 
-specific: ## Apply patches for specific
+specific: generic ## Apply patches for specific
 	@./scripts/apply-patches.sh specific
 
-specific2: ## Apply patches for specific2
+specific2: generic ## Apply patches for specific2
 	@./scripts/apply-patches.sh specific2
 
 help: ## Show interactive help
