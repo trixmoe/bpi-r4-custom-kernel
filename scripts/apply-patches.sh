@@ -32,6 +32,7 @@ done
 
 patch_set=$1
 [ -z "$patch_set" ] && { errormsg "no patch set provided\n"; print_help; exit 1; }
+will_tag=1
 
 vps_root_dir=$(rootdir)
 
