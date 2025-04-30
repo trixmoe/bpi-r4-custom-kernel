@@ -7,6 +7,20 @@ vps_root_dir=$(rootdir)
 # shellcheck source=./modules
 . ./modules
 
+while :; do
+    case $1 in
+        -one)
+            one_tag=1
+            ;;
+        -?*)
+            warnmsg 'Ignored unknown parameter: %s\n' "$1"
+            ;;
+        *)
+            break
+    esac
+    shift
+done
+
 save_patches()
 {
     git rev-parse "$including_commit" >/dev/null 2>&1 || { errormsg "\"%s\" is missing from module \"%s\"\n" "$including_commit" "$module_dir"; return 1; }
@@ -46,6 +60,7 @@ for module in $MODULES; do
     before_commit=$second_most_recent_tag
     save_patches || continue
 
+    [ -z "$one_tag" ] || continue
     vps_output_dir=$vps_root_dir/patches/$module_dir/$second_most_recent_tag
     mkdir -p "$vps_output_dir"
     including_commit=$before_commit
