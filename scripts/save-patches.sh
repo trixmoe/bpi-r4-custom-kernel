@@ -24,7 +24,7 @@ done
 save_patches()
 {
     git rev-parse "$including_commit" >/dev/null 2>&1 || { errormsg "\"%s\" is missing from module \"%s\"\n" "$including_commit" "$module_dir"; return 1; }
-    git format-patch -k --patience -o "$vps_output_dir" "$before_commit..$including_commit"
+    git format-patch --zero-commit -k --patience -o "$vps_output_dir" "$before_commit..$including_commit"
 }
 
 for module in $MODULES; do
