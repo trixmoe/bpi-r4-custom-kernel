@@ -48,7 +48,7 @@ for module in $MODULES; do
 
     cd "$vps_root_dir/$module_dir" || { errormsg "cannot enter module \"%s\"\n" "$vps_root_dir/$module_dir"; exit 1; }
 
-    git rev-parse -q --verify --end-of-options "$patch_set" > /dev/null || { warnmsg "patch set \"%s\" was previously applied. Skipping."; exit 0; }
+    git rev-parse -q --verify --end-of-options "$patch_set" > /dev/null && { warnmsg "patch set \"%s\" was previously applied. Skipping.\n" "$patch_set"; exit 0; }
 
     git config --local user.name "vps"
     git config --local user.email "vps@invalid"
