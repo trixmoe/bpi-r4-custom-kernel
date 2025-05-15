@@ -51,16 +51,10 @@ for module in $MODULES; do
     # check if part of repo -> then check if part of branch -> if both true, error out
     git rev-parse -q --verify --end-of-options "$patch_set" > /dev/null && git merge-base --is-ancestor "$patch_set" HEAD > /dev/null && { warnmsg "patch set \"%s\" was previously applied. Skipping.\n" "$patch_set"; exit 0; }
 
-    git config --local user.name "vps"
-    git config --local user.email "vps@invalid"
-
     infomsg "Applying patch set \"%s\"\n" "$patch_set"
-    git am --committer-date-is-author-date "$patches_dir"/*
+    GIT_COMMITTER_NAME="$VPS_AUTHOR_NAME" GIT_COMMITTER_EMAIL="$VPS_AUTHOR_EMAIL" git am --committer-date-is-author-date "$patches_dir"/*
 
     if [ -n "$will_tag" ]; then
         git tag -f "$patch_set"
     fi
-
-    git config --local --unset user.name
-    git config --local --unset user.email
 done

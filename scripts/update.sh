@@ -35,7 +35,7 @@ for module in $MODULES; do
         if [ "$number_of_uncommitted_filed" -gt 0 ]; then
             # Commit every uncommited thing
             git add -A || { errormsg "cannot backup unsaved changes\n"; continue; }
-            git commit --author="$VPS_AUTHOR" -m "Backup of $current_branch at $curr_date - staged / unstaged / untracked files / (EXCL. ignored)" || { errormsg "cannot backup unsaved changes\n"; continue; }
+            GIT_COMMITTER_NAME="$VPS_AUTHOR_NAME" GIT_COMMITTER_EMAIL="$VPS_AUTHOR_EMAIL" git commit --author="$VPS_AUTHOR" -m "Backup of $current_branch at $curr_date - staged / unstaged / untracked files / (EXCL. ignored)" || { errormsg "cannot backup unsaved changes\n"; continue; }
             warnmsg "All uncommitted changes (excl. ignored) were saved on %s\n" "$backup_branch"
         fi
 
