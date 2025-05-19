@@ -1,7 +1,8 @@
 #!/bin/sh
 
+scripts_dir=${BASE_SCRIPTS_DIR:-$(dirname "$0")}
 # shellcheck source=./scripts/colors
-. "$(dirname "$0")/colors"
+. "$scripts_dir/colors"
 
 # shellcheck disable=SC2034
 {
@@ -43,7 +44,7 @@ infomsg() {
 }
 
 rootdir() {
-    vps_root_dir=$(realpath "$(dirname "$0")"/../)
+    vps_root_dir=$(realpath "$scripts_dir"/../)
     cd "$vps_root_dir" || { errormsg "cannot enter versioned patch system root directory\n"; exit 1; }
     printf "%s" "$vps_root_dir"
 }
