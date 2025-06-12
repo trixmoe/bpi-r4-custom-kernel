@@ -41,11 +41,15 @@ for module in $MODULES; do
     eval upstream_commit="\$${module}_COMMIT"
 
     # Force committer and dates - allows for (more) consistent commit hashes
-    git config --local user.name "vps"
-    git config --local user.email "vps@invalid"
-    FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --tag-name-filter cat --env-filter 'export GIT_COMMITTER_DATE="$GIT_AUTHOR_DATE"; export GIT_COMMITTER_NAME="vps"; export GIT_COMMITTER_EMAIL="vps@invalid"' "$upstream_commit..HEAD"
-    git config --local --unset user.name
-    git config --local --unset user.email
+    # Need to stash changes -> filter-branch fails otherwise
+    unset stash_ref
+    stash_ref="$(git stash create -q)"
+    git reset --hard -q
+
+    # shellcheck disable=SC2016
+    FILTER_BRANCH_SQUELCH_WARNING=1 git -c user.name='vps' -c user.email='vps@invalid' -c commit.gpgsign=false filter-branch -f --tag-name-filter cat --env-filter 'export GIT_COMMITTER_DATE="$GIT_AUTHOR_DATE"; export GIT_COMMITTER_NAME="vps"; export GIT_COMMITTER_EMAIL="vps@invalid"' "$upstream_commit..HEAD"
+
+    [ -n "${stash_ref}" ] && git stash apply -q "${stash_ref}"
 
     # Saving commits top to bottom
     # Upstream, Generic, Specific
