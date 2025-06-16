@@ -7,10 +7,21 @@ vps_root_dir=$(rootdir)
 # shellcheck source=./modules
 . ./modules
 
+print_help()
+{
+    printf "Usage: save-patches.sh\n\n"
+    printf "  --one    Only save a single tag (generic)\n"
+    printf "  --help   Show this help menu\n"
+}
+
 while :; do
     case $1 in
-        -one)
+        --one)
             one_tag=1
+            ;;
+        -\?|-help|--help)
+            print_help
+            exit 0
             ;;
         -?*)
             warnmsg 'Ignored unknown parameter: %s\n' "$1"
