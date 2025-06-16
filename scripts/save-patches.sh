@@ -62,7 +62,11 @@ for module in $MODULES; do
     mkdir -p "$vps_output_dir"
     including_commit=HEAD
     second_most_recent_tag=$(git describe --tags --abbrev=0 "$most_recent_tag^1")
-    before_commit=$second_most_recent_tag
+    if [ -z "$one_tag" ]; then
+        before_commit=$second_most_recent_tag
+    else
+        before_commit=$upstream_commit
+    fi
     save_patches || continue
 
     [ -z "$one_tag" ] || continue
