@@ -3,8 +3,8 @@ default: help
 update: ## Update modules
 	@./scripts/update.sh
 
-dirclean: ## Delete modules
-	@./scripts/remove-modules.sh
+dirclean: ## Delete module directories
+	@./scripts/cleandir.sh
 
 save: ## Save patches
 	@./scripts/save-patches.sh
