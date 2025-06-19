@@ -7,6 +7,32 @@ vps_root_dir=$(rootdir)
 # shellcheck source=./modules
 . ./modules
 
+print_help()
+{
+    printf "Usage: update.sh \n"
+    printf "This script downloads the modules, as specified in the modules file.\n"
+}
+
+while :; do
+    case $1 in
+        -\?|-help|--help)
+            print_help
+            exit 0
+            ;;
+        --)
+            shift
+            break
+            ;;
+        -?*)
+            warnmsg 'Ignored unknown parameter: %s\n' "$1"
+            ;;
+        *)
+            break
+    esac
+
+    shift
+done
+
 for module in $MODULES; do
     cd "$vps_root_dir" || { errormsg "cannot return to versioned patch system root directory\n"; exit 1; }
     infomsg "Updating module: %s\n" "$module"
