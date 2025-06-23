@@ -16,7 +16,7 @@ VPS_AUTHOR="$VPS_AUTHOR_NAME <${VPS_AUTHOR_EMAIL}>"
 
 # Static files
 # shellcheck source=./modules
-MODULES_FILE_ROOTDIR="./modules"
+[ -z "$MODULES_FILE_ROOTDIR" ] && MODULES_FILE_ROOTDIR="./modules"
 
 # ------------------------------------------------------------------------------
 # Printing
