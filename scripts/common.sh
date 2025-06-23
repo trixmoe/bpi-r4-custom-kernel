@@ -28,7 +28,7 @@ VPS_AUTHOR="$VPS_AUTHOR_NAME <${VPS_AUTHOR_EMAIL}>"
 # They are used like printf
 
 errormsg() {
-    printf "$ERR --- Error: $@" >&2
+    printf "$ERR--- Error: $@" >&2
     printf "$RT" >&2
 }
 errorf() {
@@ -37,7 +37,7 @@ errorf() {
 }
 
 warnmsg() {
-    printf "$WARN --- Warning: $@" >&2
+    printf "$WARN--- Warning: $@" >&2
     printf "$RT" >&2
 }
 warnindent() {
@@ -50,7 +50,7 @@ warnf() {
 }
 
 infomsg() {
-    printf " --- $@" >&2
+    printf "$RT--- $@" >&2
 }
 # ------------------------------------------------------------------------------
 
