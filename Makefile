@@ -9,6 +9,9 @@ dirclean: ## Delete module directories
 save: ## Save patches
 	@./scripts/save-patches.sh
 
+save-one: ## Only saves a single patchset
+	@./scripts/save-patches.sh --one
+
 generic: ## Apply generic patches
 	@./scripts/apply-patches.sh generic
 
