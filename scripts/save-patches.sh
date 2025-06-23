@@ -5,8 +5,7 @@
 # cd into + save project root
 vps_root_dir=$(rootdir)
 
-# shellcheck source=./modules
-. ./modules
+. $MODULES_FILE_ROOTDIR
 
 print_help()
 {

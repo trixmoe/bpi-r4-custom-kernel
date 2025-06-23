@@ -5,8 +5,7 @@
 # cd into project root
 rootdir >/dev/null
 
-# shellcheck source=./modules
-. ./modules
+. $MODULES_FILE_ROOTDIR
 
 print_help()
 {
