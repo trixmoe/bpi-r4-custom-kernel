@@ -9,7 +9,7 @@ vps_root_dir=$(rootdir)
 
 print_help()
 {
-    printf "Usage: update.sh \n"
+    printf "Usage: update.sh\n"
     printf "This script downloads the modules, as specified in the modules file.\n"
 }
 
