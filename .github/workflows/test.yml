@@ -93,3 +93,8 @@ jobs:
              count=$(echo "$GIT_OUTPUT" | grep -c "test@example")
              [ "$count" = 3 ] || { printf "missing commit(s), found %s", $count; exit 1; }
              popd
+  test-script:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - run: ./scripts/test.sh
