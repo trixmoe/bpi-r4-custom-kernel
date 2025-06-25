@@ -5,7 +5,7 @@
 # cd into + save project root
 vps_root_dir=$(rootdir)
 
-. $MODULES_FILE_ROOTDIR
+. "$MODULES_FILE_ROOTDIR"
 
 print_help()
 {

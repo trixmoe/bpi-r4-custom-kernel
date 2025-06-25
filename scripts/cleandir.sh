@@ -5,7 +5,7 @@
 # cd into project root
 rootdir >/dev/null
 
-. $MODULES_FILE_ROOTDIR
+. "$MODULES_FILE_ROOTDIR"
 
 print_help()
 {
