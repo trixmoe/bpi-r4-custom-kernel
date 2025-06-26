@@ -56,7 +56,6 @@ for module in $MODULES; do
     # create patch directory for module
     vps_output_dir=$vps_root_dir/patches/$module_dir/
     mkdir -p "$vps_output_dir"
-    rm "$vps_output_dir"/* || true # delete old patches
 
     # Need to stash changes -> filter-branch fails otherwise
     unset stash_ref
