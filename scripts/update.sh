@@ -9,7 +9,9 @@ vps_root_dir=$(rootdir)
 print_help()
 {
     printf "Usage: update.sh\n"
-    printf "This script downloads the modules, as specified in the modules file.\n"
+    printf "This script downloads modules, as specified in the modules file.\n\n"
+
+    printf "  --help   Show this help menu\n"
 }
 
 while :; do
@@ -32,7 +34,8 @@ while :; do
     shift
 done
 
-for module in $MODULES; do
+update_module() {
+    module=$1
     cd "$vps_root_dir" || { errormsg "cannot return to versioned patch system root directory\n"; exit 1; }
     infomsg "Updating module: %s\n" "$module"
     
@@ -56,18 +59,18 @@ for module in $MODULES; do
         warnmsg "Any changes (uncommitted and committed) will be backed up into branch '%s'\n" "$backup_branch"
         number_of_uncommitted_filed=$(git status --porcelain | wc -l)
 
-        git checkout -qb "$backup_branch" || { errormsg "cannot backup current branch \"%s\", skipping.\n" "$current_branch"; continue; }
+        git checkout -qb "$backup_branch" || { errormsg "cannot backup current branch \"%s\", skipping.\n" "$current_branch"; return; }
         if [ "$number_of_uncommitted_filed" -gt 0 ]; then
             # Commit every uncommited thing
-            git add -A || { errormsg "cannot backup unsaved changes\n"; continue; }
-            GIT_COMMITTER_NAME="$VPS_AUTHOR_NAME" GIT_COMMITTER_EMAIL="$VPS_AUTHOR_EMAIL" git commit --author="$VPS_AUTHOR" -m "Backup of $current_branch at $curr_date - staged / unstaged / untracked files / (EXCL. ignored)" || { errormsg "cannot backup unsaved changes\n"; continue; }
+            git add -A || { errormsg "cannot backup unsaved changes\n"; return; }
+            GIT_COMMITTER_NAME="$VPS_AUTHOR_NAME" GIT_COMMITTER_EMAIL="$VPS_AUTHOR_EMAIL" git commit --author="$VPS_AUTHOR" -m "Backup of $current_branch at $curr_date - staged / unstaged / untracked files / (EXCL. ignored)" || { errormsg "cannot backup unsaved changes\n"; return; }
             warnmsg "All uncommitted changes (excl. ignored) were saved on %s\n" "$backup_branch"
         fi
 
         # Going back into root for the brach/commit checkout
         git checkout -q "$branch"
         git reset -q --hard "origin/$branch"
-        git pull -q > /dev/null || { errormsg "cannot pull changes for \"%s\"\n" "$directory"; continue; }
+        git pull -q > /dev/null || { errormsg "cannot pull changes for \"%s\"\n" "$directory"; return; }
         cd "$vps_root_dir" || { errormsg "cannot return to versioned patch system root directory\n"; exit 1; }
     else
         infomsg "Cloning module...\n"
@@ -84,4 +87,8 @@ for module in $MODULES; do
         warnindent "Upstream: %s\n" "$head_commit"
         git checkout "$commit"
     fi
+}
+
+for module in $MODULES; do
+    update_module "$module"
 done
