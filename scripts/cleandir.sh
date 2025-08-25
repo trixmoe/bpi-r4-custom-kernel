@@ -12,7 +12,6 @@ print_help()
     printf "Usage: cleandir.sh\n"
     printf "This script loops through the modules and deletes all directories.\n\n"
 
-    printf "  --one    Only save a single tag (generic)\n"
     printf "  --help   Show this help menu\n"
 }
 
