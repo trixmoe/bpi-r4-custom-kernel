@@ -38,10 +38,52 @@ while :; do
     shift
 done
 
-save_patches()
+# filter-branch fails if changes aren't stashed
+stash_uncomitted_changes()
 {
-    git rev-parse "$including_commit" >/dev/null 2>&1 || { errormsg "\"%s\" is missing from module \"%s\"\n" "$including_commit" "$module_dir"; return 1; }
-    git format-patch --zero-commit -k --patience -o "$vps_output_dir" "$before_commit..$including_commit"
+    unset stash_ref
+    stash_ref="$(git stash create -q)"
+    git reset --hard -q
+}
+
+# Unstash if stashed
+unstash_uncomitted_changes()
+{
+    [ -n "${stash_ref}" ] && git stash apply -q "${stash_ref}"
+}
+
+# Set committer and commit date -> consistent commit hashes
+fix_commiter_info()
+{
+    module=$1
+    upstream_commit=$2
+    # shellcheck disable=SC2016
+    FILTER_BRANCH_SQUELCH_WARNING=1 git -c user.name='vps' -c user.email='vps@invalid' -c commit.gpgsign=false filter-branch -f --tag-name-filter cat --env-filter 'export GIT_COMMITTER_DATE="$GIT_AUTHOR_DATE"; export GIT_COMMITTER_NAME="vps"; export GIT_COMMITTER_EMAIL="vps@invalid"' "$upstream_commit..HEAD"
+}
+
+get_tag()
+{
+    commit_identifier=$1
+    git describe --tags --abbrev=0 "$commit_identifier"
+}
+
+get_commit_hash()
+{
+    commit_identifier=$1
+    git rev-parse "$commit_identifier"
+}
+
+is_commit_child_of_ancestor()
+{
+    child=$1
+    ancestor=$2
+    git merge-base --is-ancestor "$ancestor" "$child"
+}
+
+# Can be removed if unused
+ancestor_error_msg()
+{
+    errormsg "The patchset tags for \"%s\" are before upstream commit. Skipping\n" "$module_dir"
 }
 
 for module in $MODULES; do
@@ -57,45 +99,46 @@ for module in $MODULES; do
     vps_output_dir=$vps_root_dir/patches/$module_dir/
     mkdir -p "$vps_output_dir"
 
-    # Need to stash changes -> filter-branch fails otherwise
-    unset stash_ref
-    stash_ref="$(git stash create -q)"
-    git reset --hard -q
+    stash_uncomitted_changes
 
-    # Set committer and commit date -> consistent commit hashes
-    upstream_commit="" # SC2154/SC2034
     eval upstream_commit="\$${module}_COMMIT"
-    # shellcheck disable=SC2016
-    FILTER_BRANCH_SQUELCH_WARNING=1 git -c user.name='vps' -c user.email='vps@invalid' -c commit.gpgsign=false filter-branch -f --tag-name-filter cat --env-filter 'export GIT_COMMITTER_DATE="$GIT_AUTHOR_DATE"; export GIT_COMMITTER_NAME="vps"; export GIT_COMMITTER_EMAIL="vps@invalid"' "$upstream_commit..HEAD"
+    fix_commiter_info "$module" "$upstream_commit"
 
-    # Unstash (from previous) if required
-    [ -n "${stash_ref}" ] && git stash apply -q "${stash_ref}"
+    unstash_uncomitted_changes
 
-    # TODO: if missing patchset tags, add them based on Git notes (see apply-patches)
-
-    # Saving commits top to bottom
-    # Upstream, Generic, Specific
-    # ..U..G....S...
-    #       ........ - specific commits
-    #    ...         - generic commits
-    most_recent_tag=$(git describe --tags --abbrev=0)
-    git merge-base --is-ancestor "$upstream_commit" "$most_recent_tag" || { errormsg "The patchset tags for \"%s\" are before upstream commit. Skipping.\n" "$module_dir" ; continue; }
-    vps_output_dir=$vps_root_dir/patches/$module_dir/$most_recent_tag
-    mkdir -p "$vps_output_dir"
-    rm "$vps_output_dir"/* || true # delete old patches
-    including_commit=HEAD
-    second_most_recent_tag=$(git describe --tags --abbrev=0 "$most_recent_tag^1")
-    if [ -z "$one_tag" ]; then
-        before_commit=$second_most_recent_tag
-    else
-        before_commit=$upstream_commit
+    current_tag=$(get_tag "HEAD") || { errormsg "There are no tags present in \"%s\". Skipping\n" "$module_dir" ; continue; }
+    current_tag_id="refs/tags/$current_tag"
+    current_commit=$(git rev-parse HEAD)
+    if [ "$current_commit" != "$(get_commit_hash "$current_tag_id")" ]; then
+        errormsg "HEAD is not tagged. Skipping"
+        warnmsg "To avoid saving patches in the wrong patchset, HEAD must be tagged correctly."
+        continue
     fi
-    save_patches || exit 1
+    saved_patchsets_count=0
 
-    [ -z "$one_tag" ] || continue
-    vps_output_dir=$vps_root_dir/patches/$module_dir/$second_most_recent_tag
-    mkdir -p "$vps_output_dir"
-    including_commit=$before_commit
-    before_commit=$upstream_commit
-    save_patches || exit 1
+    while [ -n "$current_tag" ] && is_commit_child_of_ancestor "$current_tag_id" "$upstream_commit" ; do
+        unset use_upstream
+
+        # Get ancestor details & check if younger than upstream, otherwise use upstream
+        ancestor_tag=$(get_tag "refs/tags/${current_tag}~1") \
+            && ancestor_tag_id="refs/tags/$ancestor_tag" \
+            && is_commit_child_of_ancestor "$ancestor_tag_id" "$upstream_commit" \
+            || use_upstream=1
+
+        if [ -n "$use_upstream" ]; then
+            ancestor_tag_id=$upstream_commit
+        fi
+
+        patchset_dir=$vps_root_dir/patches/$module_dir/$current_tag
+        mkdir -p "$patchset_dir"
+        rm "$patchset_dir"/* || true # delete old patches
+        git format-patch --zero-commit -k --patience -o "$patchset_dir" "$ancestor_tag_id..$current_tag_id"
+
+        saved_patchsets_count=$((saved_patchsets_count+1))
+        [ -n "$one_tag" ] && break
+        current_tag=$ancestor_tag
+        current_tag_id=$ancestor_tag_id
+    done
+
+    infomsg "Saved %i patch sets for \"%s\"\n" "$saved_patchsets_count" "$module_dir"
 done
