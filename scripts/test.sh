@@ -210,6 +210,16 @@ specific_commits() (
     # Check if patches exist
     ls -R patches/github-ignore/generic/*
     ls -R patches/github-ignore/specific/*
+    files=$(find patches/github-ignore/specific/ -maxdepth 1 -type f  | wc -l)
+    [ "$files" -eq 2 ] || { errormsg "There are not 2 patch files (%s), make save is not working as expected.\n" "$files"; exit 1; }
+
+    # Try to save-one (only specific)
+    rm -r patches/github-ignore
+    make save-one
+    ls -R patches/github-ignore/specific/*
+    files=$(find patches/github-ignore/specific/ -maxdepth 1 -type f  | wc -l)
+    [ "$files" -eq 2 ] || { errormsg "There are not 2 patch files (%s), make save-one is not working as expected.\n" "$files"; exit 1; }
+    ls -R patches/github-ignore/generic/* 2>/dev/null && { errormsg "\"make save-one\" saves more than 1 patchset."; exit 1 ; }
 
     # Reset to save without pre-existing files
     rm -r patches/github-ignore
