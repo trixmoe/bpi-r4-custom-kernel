@@ -80,12 +80,6 @@ is_commit_child_of_ancestor()
     git merge-base --is-ancestor "$ancestor" "$child"
 }
 
-# Can be removed if unused
-ancestor_error_msg()
-{
-    errormsg "The patchset tags for \"%s\" are before upstream commit. Skipping\n" "$module_dir"
-}
-
 for module in $MODULES; do
     infomsg "Saving patches for module: %s\n" "$module"
 
@@ -95,10 +89,6 @@ for module in $MODULES; do
     eval module_dir="\$${module}_DIRECTORY"
     cd "$module_dir" || { warnmsg "cannot enter module directory \"%s\"\n" "$module_dir"; continue; }
 
-    # create patch directory for module
-    vps_output_dir=$vps_root_dir/patches/$module_dir/
-    mkdir -p "$vps_output_dir"
-
     stash_uncomitted_changes
 
     eval upstream_commit="\$${module}_COMMIT"
@@ -106,6 +96,7 @@ for module in $MODULES; do
 
     unstash_uncomitted_changes
 
+    # Get top-most patchset, and do checks
     current_tag=$(get_tag "HEAD") || { errormsg "There are no tags present in \"%s\". Skipping\n" "$module_dir" ; continue; }
     current_tag_id="refs/tags/$current_tag"
     current_commit=$(git rev-parse HEAD)
@@ -116,16 +107,20 @@ for module in $MODULES; do
     fi
     saved_patchsets_count=0
 
+    # Save patchsets, as long as there is a tag, and that it is a child of the upstream commit
     while [ -n "$current_tag" ] && is_commit_child_of_ancestor "$current_tag_id" "$upstream_commit" ; do
         unset use_upstream
 
-        # Get ancestor details & check if younger than upstream, otherwise use upstream
+        # Get oldest commit of current patchset
+        # -> might be a tag, which should be younger than upstream commit, otherwise use upstream
         ancestor_tag=$(get_tag "refs/tags/${current_tag}~1") \
             && ancestor_tag_id="refs/tags/$ancestor_tag" \
             && is_commit_child_of_ancestor "$ancestor_tag_id" "$upstream_commit" \
             || use_upstream=1
 
+        # If we use upstream, there are no more patchsets
         if [ -n "$use_upstream" ]; then
+            ancestor_tag=""
             ancestor_tag_id=$upstream_commit
         fi
 
