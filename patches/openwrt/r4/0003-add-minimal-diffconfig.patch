@@ -1,0 +1,27 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: trix <75177432+trixmoe@users.noreply.github.com>
+Date: Tue, 9 Sep 2025 21:21:32 +0000
+Subject: add: minimal diffconfig
+
+aquantia removed as not required for this setup.
+kmod fails to build due to ugly unapplied patches.
+---
+ .config | 6 ++++++
+ 1 file changed, 6 insertions(+)
+ create mode 100644 .config
+
+diff --git a/.config b/.config
+new file mode 100644
+index 0000000000..8de1fb52ff
+--- /dev/null
++++ b/.config
+@@ -0,0 +1,6 @@
++CONFIG_TARGET_mediatek=y
++CONFIG_TARGET_mediatek_filogic=y
++CONFIG_TARGET_mediatek_filogic_DEVICE_bananapi_bpi-r4=y
++CONFIG_DEVEL=y
++CONFIG_EXTERNAL_KERNEL_TREE="/bpi/openwrt/kernel/"
++# CONFIG_PACKAGE_kmod-phy-aquantia is not set
+-- 
+2.39.5
+

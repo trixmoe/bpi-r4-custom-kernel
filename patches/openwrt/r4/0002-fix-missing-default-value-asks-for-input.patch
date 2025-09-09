@@ -1,0 +1,45 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: trix <75177432+trixmoe@users.noreply.github.com>
+Date: Tue, 9 Sep 2025 21:19:47 +0000
+Subject: fix: missing default value (asks for input)
+
+---
+ package/boot/uboot-mediatek/patches/450-add-bpi-r4.patch | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/package/boot/uboot-mediatek/patches/450-add-bpi-r4.patch b/package/boot/uboot-mediatek/patches/450-add-bpi-r4.patch
+index 1b1ac9262f..4ba04bb597 100644
+--- a/package/boot/uboot-mediatek/patches/450-add-bpi-r4.patch
++++ b/package/boot/uboot-mediatek/patches/450-add-bpi-r4.patch
+@@ -1,6 +1,7 @@
+ --- /dev/null
+ +++ b/configs/mt7988a_bananapi_bpi-r4-emmc_defconfig
+-@@ -0,0 +1,140 @@
++@@ -0,0 +1,141 @@
+++CONFIG_SERIAL_RX_BUFFER_SIZE=256
+ +CONFIG_ARM=y
+ +CONFIG_SYS_HAS_NONCACHED_MEMORY=y
+ +CONFIG_POSITION_INDEPENDENT=y
+@@ -143,7 +144,8 @@
+ +CONFIG_LMB_MAX_REGIONS=64
+ --- /dev/null
+ +++ b/configs/mt7988a_bananapi_bpi-r4-sdmmc_defconfig
+-@@ -0,0 +1,140 @@
++@@ -0,0 +1,141 @@
+++CONFIG_SERIAL_RX_BUFFER_SIZE=256
+ +CONFIG_ARM=y
+ +CONFIG_SYS_HAS_NONCACHED_MEMORY=y
+ +CONFIG_POSITION_INDEPENDENT=y
+@@ -286,7 +288,8 @@
+ +CONFIG_LMB_MAX_REGIONS=64
+ --- /dev/null
+ +++ b/configs/mt7988a_bananapi_bpi-r4-snand_defconfig
+-@@ -0,0 +1,140 @@
++@@ -0,0 +1,141 @@
+++CONFIG_SERIAL_RX_BUFFER_SIZE=256
+ +CONFIG_ARM=y
+ +CONFIG_SYS_HAS_NONCACHED_MEMORY=y
+ +CONFIG_POSITION_INDEPENDENT=y
+-- 
+2.39.5
+

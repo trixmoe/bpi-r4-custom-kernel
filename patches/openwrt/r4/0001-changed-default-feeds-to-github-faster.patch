@@ -1,0 +1,25 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: trix <75177432+trixmoe@users.noreply.github.com>
+Date: Tue, 9 Sep 2025 21:19:36 +0000
+Subject: changed: default feeds to github, faster
+
+---
+ feeds.conf.default | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/feeds.conf.default b/feeds.conf.default
+index 581de056c4..4017840589 100644
+--- a/feeds.conf.default
++++ b/feeds.conf.default
+@@ -1,4 +1,4 @@
+-src-git packages https://git.openwrt.org/feed/packages.git;openwrt-24.10
+-src-git luci https://git.openwrt.org/project/luci.git;openwrt-24.10
+-src-git routing https://git.openwrt.org/feed/routing.git;openwrt-24.10
+-src-git telephony https://git.openwrt.org/feed/telephony.git;openwrt-24.10
++src-git packages https://github.com/openwrt/openwrt/packages.git;openwrt-24.10
++src-git luci https://github.com/openwrt/openwrt/luci.git;openwrt-24.10
++src-git routing https://github.com/openwrt/openwrt/routing.git;openwrt-24.10
++src-git telephony https://github.com/openwrt/openwrt/telephony.git;openwrt-24.10
+-- 
+2.39.5
+
