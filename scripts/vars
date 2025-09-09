@@ -1,6 +1,7 @@
 build_user=bpi
 root_dir=bpi
 proj_dir=openwrt
+build_dir="/${root_dir}/${proj_dir}"
 cached_volume="bpi-r4-openwrt-cache-$(id -un)"
 base_name="bpi-r4-openwrt-$(id -un)"
 container_name=$base_name

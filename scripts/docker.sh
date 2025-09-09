@@ -55,7 +55,7 @@ run()
         bind_mount="type=bind,src=./,dst=${build_dir}"
     fi
     docker run --name "$container_name" \
-        --mount "$bind_mount" --mount "type=volume,src=${cached_volume},dst=${build_dir}/openwrt" \
+        --mount "$bind_mount" --mount "type=volume,src=${cached_volume},dst=${build_dir}/openwrt" --mount "type=volume,src=${cached_volume}-kernel,dst=${build_dir}/kernel" \
         -dt "$image_name" bash
 }
 
