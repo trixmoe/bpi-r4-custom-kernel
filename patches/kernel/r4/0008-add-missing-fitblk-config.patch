@@ -1,0 +1,21 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: ttaiclet <ttaiclet@ripe.net>
+Date: Tue, 9 Sep 2025 21:56:57 +0000
+Subject: add: missing fitblk config
+
+---
+ .config | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/.config b/.config
+index ecf45dabd608..d68729140c23 100644
+--- a/.config
++++ b/.config
+@@ -1265,3 +1265,4 @@ CONFIG_SECCOMP=y
+ 
+ #openwrt problems
+ CONFIG_CFG80211_HEADERS=y
++CONFIG_UIMAGE_FIT_BLK=y
+-- 
+2.39.5
+

@@ -1,0 +1,23 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: ttaiclet <ttaiclet@ripe.net>
+Date: Tue, 9 Sep 2025 21:48:41 +0000
+Subject: fix: missing openwrt-related config
+
+---
+ .config | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/.config b/.config
+index 69bd9e6570e9..ecf45dabd608 100644
+--- a/.config
++++ b/.config
+@@ -1262,3 +1262,6 @@ CONFIG_POSIX_MQUEUE_SYSCTL=y
+ CONFIG_HAVE_ARCH_SECCOMP_FILTER=y
+ CONFIG_SECCOMP_FILTER=y
+ CONFIG_SECCOMP=y
++
++#openwrt problems
++CONFIG_CFG80211_HEADERS=y
+-- 
+2.39.5
+
