@@ -1,6 +1,11 @@
-MODULES="OPENWRT"
+MODULES="OPENWRT KERNEL"
 
 OPENWRT_URL=https://github.com/openwrt/openwrt.git
 OPENWRT_BRANCH=openwrt-24.10
 OPENWRT_COMMIT=bc9f1cab83d09f91e28c7ca830de778b08bd2842
 OPENWRT_DIRECTORY=openwrt
+
+KERNEL_URL=https://github.com/frank-w/BPI-Router-Linux.git
+KERNEL_BRANCH=6.6-main
+KERNEL_COMMIT=9e413e5ba1993dfe9a9ff57b4a0e6d99fb4091bc
+KERNEL_DIRECTORY=kernel
