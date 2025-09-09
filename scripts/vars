@@ -1,0 +1,4 @@
+build_user=bpi
+root_dir=bpi
+proj_dir=openwrt
+cached_volume="bpi-r4-openwrt-$(id -un)"
